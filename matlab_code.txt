@@ -1,0 +1,36 @@
+% Read humidity over the past hour from a ThingSpeak channel and write 
+% the average to another ThingSpeak channel. 
+
+% Channel 12397 contains data from the MathWorks weather station, located 
+% in Natick, Massachusetts. The data is collected once every minute. Field 
+% 3 contains humidity data. 
+
+
+readkey='HN7KQ6WSXMO4R23Q';
+writekey='B7N0T7Q0YC1P8NAS';
+
+readChannelID = 1625035; 
+writeChannelID=1625035;
+
+i=0;j=0;k=0;
+humi= thingSpeakRead(readChannelID,'ReadKey', readkey, 'Fields', 1);
+distance=thingSpeakRead(readChannelID,'ReadKey', readkey, 'Fields', 2);
+temperature=thingSpeakRead(readChannelID,'ReadKey', readkey, 'Fields', 3);
+sound=thingSpeakRead(readChannelID,'ReadKey', readkey, 'Fields', 4);
+
+if humi>400
+    i=1
+else
+    i=0
+end
+if distance<10 && sound==1
+    j=1
+else
+    j=0
+end
+if temperature>28
+    k=1
+else
+    k=0
+end
+thingSpeakWrite(writeChannelID, [i,j,k],'WriteKey', writekey, 'Fields', [5,6,7]);
